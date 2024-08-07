@@ -21,15 +21,29 @@
     </div>
 
     <script>
+        function getParameterByName(name) {
+            const url = window.location.href;
+            name = name.replace(/[\[\]]/g, '\\$&');
+            const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+            const results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+
         document.getElementById('loginForm').addEventListener('submit', function(event) {
             event.preventDefault();
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
+            const serialNumber = getParameterByName('serialNumber');
 
             // Simple validation (for demonstration purposes)
             if (username === 'admin' && password === 'password') {
-                // Example serial number for demonstration
-                window.location.href = 'result.html?serialNumber=ssscand001'; // Replace with actual serial number
+                if (serialNumber) {
+                    window.location.href = 'result.html?serialNumber=' + encodeURIComponent(serialNumber);
+                } else {
+                    alert('Serial number is missing. Please scan the QR code again.');
+                }
             } else {
                 alert('Invalid credentials');
             }
