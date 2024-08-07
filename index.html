@@ -21,31 +21,35 @@
     </div>
 
     <script>
-        function getParameterByName(name) {
-            const url = window.location.href;
-            name = name.replace(/[\[\]]/g, '\\$&');
-            const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
-            const results = regex.exec(url);
-            if (!results) return null;
-            if (!results[2]) return '';
-            return decodeURIComponent(results[2].replace(/\+/g, ' '));
-        }
-
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
+        document.getElementById('loginForm').addEventListener('submit', async function(event) {
             event.preventDefault();
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
-            const serialNumber = getParameterByName('serialNumber');
 
-            // Simple validation (for demonstration purposes)
-            if (username === 'admin' && password === 'password') {
-                if (serialNumber) {
-                    window.location.href = 'result.html?serialNumber=' + encodeURIComponent(serialNumber);
+            const scriptUrl = 'https://script.google.com/macros/s/AKfycby_iza1oXIPtC0PKSduaYa2B4KBSOD8DYwJbvhfoP8d1gmgJyncg_Sm47iP5PShp3D2MA/exec'; // Replace with your web app URL
+
+            try {
+                const response = await fetch(scriptUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({ username, password })
+                });
+                
+                const result = await response.text();
+                
+                if (result === 'Authenticated') {
+                    // Redirect to the result page with serial number if authentication is successful
+                    const serialNumber = new URLSearchParams(window.location.search).get('serialNumber');
+                    if (serialNumber) {
+                        window.location.href = `result.html?serialNumber=${encodeURIComponent(serialNumber)}`;
+                    } else {
+                        alert('Serial number is missing.');
+                    }
                 } else {
-                    alert('Serial number is missing. Please scan the QR code again.');
+                    alert('Invalid credentials.');
                 }
-            } else {
-                alert('Invalid credentials');
+            } catch (error) {
+                alert('An error occurred: ' + error.message);
             }
         });
     </script>
