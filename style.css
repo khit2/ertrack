@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -18,30 +18,30 @@ body {
     background-position: center;
 }
 
-.wrapper{
-    width: 90%; /* Changed from 420px */
-    max-width: 420px; /* Added to maintain maximum width */
-    background: transparent;
+.wrapper {
+    width: 90%; /* Use percentage for responsive design */
+    max-width: 400px; /* Maintain a max width for larger screens */
+    background: rgba(255, 255, 255, 0.1);
     border: 2px solid rgba(255, 255, 255, .1);
     backdrop-filter: blur(10px);
     color: #fff;
     border-radius: 10px;
-    padding: 20px; /* Changed from 30px 40px */
+    padding: 20px;
 }
 
-.wrapper h1{
-    font-size: 28px; /* Changed from 36px */
+.wrapper h1 {
+    font-size: 1.8rem;
     text-align: center;
 }
 
-.wrapper .input-box{
+.wrapper .input-box {
     position: relative;
     width: 100%;
-    height: 45px; /* Changed from 50px */
-    margin: 20px 0; /* Changed from 30px 0 */
+    height: 50px;
+    margin: 20px 0;
 }
 
-.input-box input{
+.input-box input {
     width: 100%;
     height: 100%;
     background: transparent;
@@ -49,103 +49,103 @@ body {
     outline: none;
     border: 2px solid rgba(255, 255, 255, .2);
     border-radius: 40px;
-    font-size: 14px; /* Changed from 16px */
+    font-size: 1rem;
     color: #fff;
-    padding: 15px 40px 15px 20px; /* Changed from 20px 45px 20px 20px */
+    padding: 0 45px 0 20px;
 }
 
-.input-box input::placeholder{
+.input-box input::placeholder {
     color: #fff;
 }
 
-.input-box .box-icon{
+.input-box .box-icon {
     position: absolute;
     right: 20px;
-    top: 50%; /* Changed from top: 30%; */
+    top: 50%;
     transform: translateY(-50%);
-    font-size: 20px;
+    font-size: 1.5rem;
 }
 
-.wrapper .remember-forgot{
+.wrapper .remember-forgot {
     display: flex;
-    flex-direction: column; /* Changed from row to column */
-    align-items: center; /* Center align items */
-    font-size: 12px; /* Changed from 14.5px */
-    margin: 10px 0; /* Changed from -15px 0 15px */
+    justify-content: space-between;
+    font-size: 0.9rem;
+    margin: 10px 0;
 }
 
-.remember-forgot label{
-    margin-bottom: 10px; /* Add margin for separation */
+.remember-forgot label input {
+    accent-color: #fff;
+    margin-right: 5px;
 }
 
-.remember-forgot a{
+.remember-forgot a {
     color: #fff;
     text-decoration: none;
 }
 
-.remember-forgot a:hover{
+.remember-forgot a:hover {
     text-decoration: underline;
 }
 
-.wrapper .btn{
+.wrapper .btn {
     width: 100%;
-    height: 40px; /* Changed from 45px */
+    height: 45px;
     background: #fff;
     border: none;
     outline: none;
     border-radius: 40px;
     box-shadow: 0 0 10px rgba(0, 0, 0, .1);
     cursor: pointer;
-    font-size: 18px; /* Changed from 20px */
+    font-size: 1.1rem;
     color: #333;
     font-weight: 600;
 }
 
-.wrapper .register-link{
-    font-size: 12px; /* Changed from 14.5px */
+.wrapper .register-link {
+    font-size: 0.9rem;
     text-align: center;
-    margin: 15px 0 10px; /* Changed from 20px 0 15px */
+    margin: 20px 0 15px;
 }
 
-.register-link p a{
+.register-link p a {
     color: #fff;
     text-decoration: none;
     font-weight: 600;
 }
 
-.register-link p a:hover{
+.register-link p a:hover {
     text-decoration: underline;
 }
 
-/* Media Queries for smaller devices */
+/* Additional styles for small screens */
 @media (max-width: 480px) {
-    .wrapper{
-        padding: 15px; /* Reduce padding */
+    .wrapper {
+        padding: 15px;
     }
 
-    .wrapper h1{
-        font-size: 24px; /* Further reduce font size */
+    .wrapper h1 {
+        font-size: 1.6rem;
     }
 
-    .wrapper .input-box{
-        height: 40px; /* Further reduce height */
+    .wrapper .input-box {
+        height: 45px;
     }
 
-    .input-box input{
-        font-size: 12px; /* Further reduce font size */
-        padding: 10px 35px 10px 15px; /* Adjust padding */
+    .input-box input {
+        font-size: 0.9rem;
+        padding: 0 40px 0 15px;
     }
 
-    .input-box .box-icon{
-        font-size: 18px; /* Adjust icon size */
+    .input-box .box-icon {
+        font-size: 1.3rem;
     }
 
-    .wrapper .btn{
-        height: 35px; /* Further reduce button height */
-        font-size: 16px; /* Further reduce font size */
+    .wrapper .btn {
+        height: 40px;
+        font-size: 1rem;
     }
 
-    .wrapper .register-link{
-        font-size: 10px; /* Further reduce font size */
+    .wrapper .register-link {
+        font-size: 0.8rem;
     }
 }
