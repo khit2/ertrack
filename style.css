@@ -18,27 +18,27 @@ body {
     background-position: center;
 }
 
-
 .wrapper{
-    width: 420px;
+    width: 90%; /* Changed from 420px */
+    max-width: 420px; /* Added to maintain maximum width */
     background: transparent;
     border: 2px solid rgba(255, 255, 255, .1);
     backdrop-filter: blur(10px);
     color: #fff;
     border-radius: 10px;
-    padding: 30px 40px;
+    padding: 20px; /* Changed from 30px 40px */
 }
 
 .wrapper h1{
-    font-size: 36px;
+    font-size: 28px; /* Changed from 36px */
     text-align: center;
 }
 
 .wrapper .input-box{
     position: relative;
     width: 100%;
-    height: 50px;
-    margin: 30px 0;
+    height: 45px; /* Changed from 50px */
+    margin: 20px 0; /* Changed from 30px 0 */
 }
 
 .input-box input{
@@ -49,33 +49,33 @@ body {
     outline: none;
     border: 2px solid rgba(255, 255, 255, .2);
     border-radius: 40px;
-    font-size: 16px;
+    font-size: 14px; /* Changed from 16px */
     color: #fff;
-    padding: 20px 45px 20px 20px;
+    padding: 15px 40px 15px 20px; /* Changed from 20px 45px 20px 20px */
 }
 
 .input-box input::placeholder{
     color: #fff;
 }
 
-.input-box box-icon{
+.input-box .box-icon{
     position: absolute;
     right: 20px;
-    top: 30%;
-    transform: translate(-50%);
+    top: 50%; /* Changed from top: 30%; */
+    transform: translateY(-50%);
     font-size: 20px;
 }
 
 .wrapper .remember-forgot{
     display: flex;
-    justify-content: space-between;
-    font-size: 14.5px;
-    margin: -15px 0 15px;
+    flex-direction: column; /* Changed from row to column */
+    align-items: center; /* Center align items */
+    font-size: 12px; /* Changed from 14.5px */
+    margin: 10px 0; /* Changed from -15px 0 15px */
 }
 
-.remember-forgot label input{
-    accent-color: #fff;
-    margin-right: 5px;
+.remember-forgot label{
+    margin-bottom: 10px; /* Add margin for separation */
 }
 
 .remember-forgot a{
@@ -89,22 +89,22 @@ body {
 
 .wrapper .btn{
     width: 100%;
-    height: 45px;
+    height: 40px; /* Changed from 45px */
     background: #fff;
     border: none;
     outline: none;
     border-radius: 40px;
     box-shadow: 0 0 10px rgba(0, 0, 0, .1);
     cursor: pointer;
-    font-size: 20px;
+    font-size: 18px; /* Changed from 20px */
     color: #333;
     font-weight: 600;
 }
 
 .wrapper .register-link{
-    font-size: 14.5px;
+    font-size: 12px; /* Changed from 14.5px */
     text-align: center;
-    margin: 20px 0 15px;
+    margin: 15px 0 10px; /* Changed from 20px 0 15px */
 }
 
 .register-link p a{
@@ -115,4 +115,37 @@ body {
 
 .register-link p a:hover{
     text-decoration: underline;
+}
+
+/* Media Queries for smaller devices */
+@media (max-width: 480px) {
+    .wrapper{
+        padding: 15px; /* Reduce padding */
+    }
+
+    .wrapper h1{
+        font-size: 24px; /* Further reduce font size */
+    }
+
+    .wrapper .input-box{
+        height: 40px; /* Further reduce height */
+    }
+
+    .input-box input{
+        font-size: 12px; /* Further reduce font size */
+        padding: 10px 35px 10px 15px; /* Adjust padding */
+    }
+
+    .input-box .box-icon{
+        font-size: 18px; /* Adjust icon size */
+    }
+
+    .wrapper .btn{
+        height: 35px; /* Further reduce button height */
+        font-size: 16px; /* Further reduce font size */
+    }
+
+    .wrapper .register-link{
+        font-size: 10px; /* Further reduce font size */
+    }
 }
