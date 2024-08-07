@@ -37,37 +37,16 @@
             const password = document.getElementById('password').value;
             const serialNumber = getParameterByName('serialNumber');
 
-            const data = {
-                username: username,
-                password: password,
-                serialNumber: serialNumber
-            };
-
-            fetch('YOUR_APPS_SCRIPT_WEB_APP_URL', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: new URLSearchParams(data)
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(result => {
-                if (result.success) {
-                    alert(result.message);
-                    // You can redirect or display the message as needed
-                    // window.location.href = 'result.html?serialNumber=' + encodeURIComponent(serialNumber);
+            // Simple validation (for demonstration purposes)
+            if (username === 'admin' && password === 'password') {
+                if (serialNumber) {
+                    window.location.href = 'result.html?serialNumber=' + encodeURIComponent(serialNumber);
                 } else {
-                    alert(result.message || 'Invalid credentials');
+                    alert('Serial number is missing. Please scan the QR code again.');
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+            } else {
+                alert('Invalid credentials');
+            }
         });
     </script>
 </body>
