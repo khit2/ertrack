@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Result Page</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        
+        h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        #result {
+            font-size: 1.2em;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>Result</h1>
+        <p id="result">Loading...</p>
+    </div>
+
+    <script>
+        async function fetchResult() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const serialNumber = urlParams.get('serialNumber');
+            
+            if (!serialNumber) {
+                document.getElementById('result').innerText = 'No serial number provided';
+                return;
+            }
+
+            // Construct the URL for the fetch request
+            const scriptUrl = `https://script.google.com/macros/s/AKfycbyFetxAIo29C7d1wRm8XHqIDtSoq_fhsCcnCK1o029AiJs2QtNz8Gpw5jh1wfWs0meXWw/exec?serialNumber=${encodeURIComponent(serialNumber)}`;
+
+            try {
+                // Perform the fetch request to the Google Apps Script web app
+                const response = await fetch(scriptUrl);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                // Get and display the result
+                const result = await response.text();
+                document.getElementById('result').innerText = result;
+            } catch (error) {
+                // Handle and display errors
+                console.error('Error fetching the result:', error);
+                document.getElementById('result').innerText = 'Error fetching result: ' + error.message;
+                alert('Failed to fetch the result. Check the console for details.');
+            }
+        }
+
+        // Call the fetchResult function when the page loads
+        window.onload = fetchResult;
+    </script>
+</body>
+</html>
