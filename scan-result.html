@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting...</title>
+</head>
+<body>
+    <script>
+        function getQueryParam(param) {
+            const params = new URLSearchParams(window.location.search);
+            return params.get(param);
+        }
+
+        const serialNumber = getQueryParam('serialNumber');
+        if (serialNumber) {
+            window.location.href = 'login.html?serialNumber=' + encodeURIComponent(serialNumber);
+        } else {
+            alert('Invalid QR code. Please try again.');
+        }
+    </script>
+</body>
+</html>
