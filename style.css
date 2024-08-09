@@ -33,7 +33,15 @@ body {
     font-size: 1.8rem;
     text-align: center;
 }
-
+h3, h4{
+	text-align: center;
+	margin: 0;  /* Removes default margin */
+            padding: 0; /* Removes default padding */
+            line-height: 1.2;
+}
+h4{
+	font-size: 1.0rem;
+}
 .wrapper .input-box {
     position: relative;
     width: 100%;
@@ -148,4 +156,12 @@ body {
     .wrapper .register-link {
         font-size: 0.8rem;
     }
+}
+
+
+.footer-image {
+    max-width: 10%;
+    height: auto;
+margin-top: 20px;
+    
 }
