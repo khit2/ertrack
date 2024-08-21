@@ -16,12 +16,28 @@
         h1 {
             font-size: 2em;
             margin-bottom: 20px;
-            text-decoration: underline; /* Add underline */
-            text-decoration-color: darkblue; /* Optional: Change the color of the underline */
-            text-decoration-thickness: 2px; /* Optional: Change the thickness of the underline */
+            text-decoration: underline;
+            text-decoration-color: darkblue;
+            text-decoration-thickness: 2px;
         }
         #result {
             font-size: 1.2em;
+        }
+        table {
+            margin: 20px auto;
+            border: 1px solid #fff;
+            border-collapse: collapse;
+            width: 80%;
+        }
+        th, td {
+            border: 1px solid #fff;
+            padding: 8px; /* Adjust padding as needed */
+            text-align: center;
+            font-size: 0.4em; /* Adjust font size for better readability */
+        }
+        th {
+            background-color: #555;
+            font-size: 0.4em; /* Slightly larger font size for headers */
         }
     </style>
 </head>
@@ -33,7 +49,7 @@
         <h3>Social Security System</h3>
         <h4>Candon Branch</h4><br>
         <h1>Employer Profile</h1>
-        <p id="result">Loading...</p>
+        <div id="result">Loading...</div>
     </div>
 
     <script>
@@ -46,7 +62,7 @@
                 return;
             }
 
-            const scriptUrl = `https://script.google.com/macros/s/AKfycbxSDcQny1pVG0OZFmchb7kwksOYq7ou6pn6qXEWFTPI16A5bkIYB7H-AfLBnLUlXdvNCQ/exec?serialNumber=${encodeURIComponent(serialNumber)}`;
+            const scriptUrl = `https://script.google.com/macros/s/AKfycbxfMSzwybuDZGePHht542uU6NWKI7AsY-0TUSTSEf0uJ0B1ZySscoa7AySchVnjWF_dhg/exec?serialNumber=${encodeURIComponent(serialNumber)}`;
 
             try {
                 const response = await fetch(scriptUrl);
@@ -55,23 +71,76 @@
                 }
                 const data = await response.json(); // Parse response as JSON
 
-                // Display only the required fields
+                let htmlContent = '';
                 if (data.error) {
-                    document.getElementById('result').innerText = data.error;
+                    htmlContent = data.error;
                 } else {
                     const erNumber = data.erNumber || 'Not available';
                     const erName = data.erName || 'Not available';
-
-                    document.getElementById('result').innerHTML = `
+                    htmlContent = `
                         <strong>ER NUMBER:</strong><br> ${erNumber}<br><br>
-                        <strong>ER NAME:</strong><br> ${erName}
+                        <strong>ER NAME:</strong><br> ${erName}<br><br>
+                        <h4>R3/R5 RECONCILIATION</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Applicable Date</th>
+                                    <th>Payment Date</th>
+                                    <th>Amt Paid Per R-5</th>
+                                    <th>Amt Due Per R-3</th>
+                                    <th>Difference Over/Under</th>
+                                    <th>Cumulative Over/Under</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    `;
+
+                    data.reconciliationData.forEach((row, index) => {
+                        if (index > 0) { // Skip header row
+                            const applicableDate = formatDate(row[0]);
+                            const paymentDate = formatDate(row[1]);
+                            const amtPaid = formatNumber(row[2]);
+                            const amtDue = formatNumber(row[3]);
+                            const diffOverUnder = formatNumber(row[4]);
+                            const cumOverUnder = formatNumber(row[5]);
+
+                            htmlContent += `
+                                <tr>
+                                    <td>${applicableDate}</td>
+                                    <td>${paymentDate}</td>
+                                    <td>${amtPaid}</td>
+                                    <td>${amtDue}</td>
+                                    <td>${diffOverUnder}</td>
+                                    <td>${cumOverUnder}</td>
+                                </tr>
+                            `;
+                        }
+                    });
+
+                    htmlContent += `
+                            </tbody>
+                        </table>
                     `;
                 }
+
+                document.getElementById('result').innerHTML = htmlContent;
             } catch (error) {
                 console.error('Error fetching the result:', error);
                 document.getElementById('result').innerText = 'Error fetching result: ' + error.message;
                 alert('Failed to fetch the result. Check the console for details.');
             }
+        }
+
+        function formatDate(date) {
+            const d = new Date(date);
+            const day = String(d.getDate()).padStart(2, '0');
+            const month = String(d.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+            const year = d.getFullYear();
+            return `${month}-${year}`; // Adjust format as needed
+        }
+
+        function formatNumber(num) {
+            return parseFloat(num).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         }
 
         window.onload = fetchResult;
