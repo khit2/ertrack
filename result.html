@@ -1,155 +1,186 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employer Profile Page</title>
-    <link rel="stylesheet" href="style.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #333;
-            color: white;
-            text-align: center;
-            padding: 20px;
-        }
-        h1 {
-            font-size: 2em;
-            margin-bottom: 20px;
-            text-decoration: underline;
-            text-decoration-color: darkblue;
-            text-decoration-thickness: 2px;
-        }
-        #result {
-            font-size: 1.2em;
-        }
-        .table-container {
-            overflow-x: auto; /* Enables horizontal scrolling if necessary */
-            width: 100%; /* Ensures the container takes full width */
-            margin: 20px 0; /* Add margin around the table container */
-        }
-        table {
-            border: 1px solid #fff;
-            border-collapse: collapse;
-            width: 100%; /* Adjust table width to 100% of its container */
-        }
-        th, td {
-            border: 1px solid #fff;
-            padding: 8px; /* Adjust padding as needed */
-            text-align: center;
-            font-size: 0.4em; /* Adjust font size for better readability */
-        }
-        th {
-            background-color: #555;
-            font-size: 0.3em; /* Slightly larger font size for headers */
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Employer Profile Page</title>
+<link rel="stylesheet" href="style.css">
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #333;
+        color: white;
+        text-align: center;
+        padding: 20px;
+    }
+    h1 {
+        font-size: 2em;
+        margin-bottom: 20px;
+        text-decoration: underline;
+        text-decoration-color: darkblue;
+        text-decoration-thickness: 2px;
+    }
+    #result {
+        font-size: 1.2em;
+    }
+    .table-container {
+        overflow-x: auto; /* Enables horizontal scrolling if necessary */
+        width: 100%; /* Ensures the container takes full width */
+        margin: 20px 0; /* Add margin around the table container */
+    }
+    table {
+        border: 1px solid #fff;
+        border-collapse: collapse;
+        width: 100%; /* Adjust table width to 100% of its container */
+    }
+    th, td {
+        border: 1px solid #fff;
+        padding: 8px; /* Adjust padding as needed */
+        text-align: center;
+        font-size: 0.4em; /* Adjust font size for better readability */
+    }
+    th {
+        background-color: #555;
+        font-size: 0.3em; /* Slightly larger font size for headers */
+    }
+    .filter-input {
+        margin: 20px 0;
+        padding: 10px;
+        font-size: .5em;
+        width: 80%;
+        border: 1px solid #fff;
+        border-radius: 5px;
+        background-color: #444;
+        color: #fff;
+    }
+</style>
 </head>
 <body>
-    <div class="wrapper">
-        <img src="ssslogo.jpg" alt="Footer Image" class="footer-image">
-
-        <h3>Republic of the Philippines</h3>
-        <h3>Social Security System</h3>
-        <h4>Candon Branch</h4><br>
-        <h1>Employer Profile</h1>
-        <div id="result">Loading...</div>
+<div class="wrapper">
+    <img src="ssslogo.jpg" alt="Footer Image" class="footer-image">
+    <h3>Republic of the Philippines</h3>
+    <h3>Social Security System</h3>
+    <h4>Candon Branch</h4><br>
+    <h1>Employer Profile</h1>
+    <div id="result">
+        <input type="text" id="filterInput" class="filter-input" placeholder="Filter by Applicable Date or Payment Date...">
+        Loading...
     </div>
+</div>
 
-    <script>
-        async function fetchResult() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const serialNumber = urlParams.get('serialNumber');
-            
-            if (!serialNumber) {
-                document.getElementById('result').innerText = 'No serial number provided';
-                return;
+<script>
+    async function fetchResult() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const serialNumber = urlParams.get('serialNumber');
+        if (!serialNumber) {
+            document.getElementById('result').innerText = 'No serial number provided';
+            return;
+        }
+
+        const scriptUrl = `https://script.google.com/macros/s/AKfycbxfMSzwybuDZGePHht542uU6NWKI7AsY-0TUSTSEf0uJ0B1ZySscoa7AySchVnjWF_dhg/exec?serialNumber=${encodeURIComponent(serialNumber)}`;
+
+        try {
+            const response = await fetch(scriptUrl);
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const data = await response.json(); // Parse response as JSON
+
+            let htmlContent = '';
+            if (data.error) {
+                htmlContent = data.error;
+            } else {
+                const erNumber = data.erNumber || 'Not available';
+                const erName = data.erName || 'Not available';
+                htmlContent = `
+<strong>ER NUMBER:</strong><br> ${erNumber}<br><br>
+<strong>ER NAME:</strong><br> ${erName}<br><br>
+<h4>R3/R5 RECONCILIATION</h4>
+<div class="table-container">
+    <input type="text" id="filterInput" class="filter-input" placeholder="Filter by Applicable Date...">
+    <table id="reconciliationTable">
+        <thead>
+            <tr>
+                <th>Applicable Date</th>
+                <th>Payment Date</th>
+                <th>Amt Paid Per R-5</th>
+                <th>Amt Due Per R-3</th>
+                <th>Difference Over/Under</th>
+                <th>Cumulative Over/Under</th>
+            </tr>
+        </thead>
+        <tbody>
+                `;
+
+                data.reconciliationData.forEach((row, index) => {
+                    if (index > 0) { // Skip header row
+                        const applicableDate = formatDate(row[0]);
+                        const paymentDate = formatDate(row[1]);
+                        const amtPaid = formatNumber(row[2]);
+                        const amtDue = formatNumber(row[3]);
+                        const diffOverUnder = formatNumber(row[4]);
+                        const cumOverUnder = formatNumber(row[5]);
+
+                        htmlContent += `
+                <tr>
+                    <td>${applicableDate}</td>
+                    <td>${paymentDate}</td>
+                    <td>${amtPaid}</td>
+                    <td>${amtDue}</td>
+                    <td>${diffOverUnder}</td>
+                    <td>${cumOverUnder}</td>
+                </tr>
+                `;
+                    }
+                });
+
+                htmlContent += `
+        </tbody>
+    </table>
+</div>
+                `;
             }
 
-            const scriptUrl = `https://script.google.com/macros/s/AKfycbxfMSzwybuDZGePHht542uU6NWKI7AsY-0TUSTSEf0uJ0B1ZySscoa7AySchVnjWF_dhg/exec?serialNumber=${encodeURIComponent(serialNumber)}`;
-
-            try {
-                const response = await fetch(scriptUrl);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                const data = await response.json(); // Parse response as JSON
-
-                let htmlContent = '';
-                if (data.error) {
-                    htmlContent = data.error;
-                } else {
-                    const erNumber = data.erNumber || 'Not available';
-                    const erName = data.erName || 'Not available';
-                    htmlContent = `
-                        <strong>ER NUMBER:</strong><br> ${erNumber}<br><br>
-                        <strong>ER NAME:</strong><br> ${erName}<br><br>
-                        <h4>R3/R5 RECONCILIATION</h4>
-                        <div class="table-container">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Applicable Date</th>
-                                        <th>Payment Date</th>
-                                        <th>Amt Paid Per R-5</th>
-                                        <th>Amt Due Per R-3</th>
-                                        <th>Difference Over/Under</th>
-                                        <th>Cumulative Over/Under</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                    `;
-
-                    data.reconciliationData.forEach((row, index) => {
-                        if (index > 0) { // Skip header row
-                            const applicableDate = formatDate(row[0]);
-                            const paymentDate = formatDate(row[1]);
-                            const amtPaid = formatNumber(row[2]);
-                            const amtDue = formatNumber(row[3]);
-                            const diffOverUnder = formatNumber(row[4]);
-                            const cumOverUnder = formatNumber(row[5]);
-
-                            htmlContent += `
-                                <tr>
-                                    <td>${applicableDate}</td>
-                                    <td>${paymentDate}</td>
-                                    <td>${amtPaid}</td>
-                                    <td>${amtDue}</td>
-                                    <td>${diffOverUnder}</td>
-                                    <td>${cumOverUnder}</td>
-                                </tr>
-                            `;
-                        }
-                    });
-
-                    htmlContent += `
-                                </tbody>
-                            </table>
-                        </div>
-                    `;
-                }
-
-                document.getElementById('result').innerHTML = htmlContent;
-            } catch (error) {
-                console.error('Error fetching the result:', error);
-                document.getElementById('result').innerText = 'Error fetching result: ' + error.message;
-                alert('Failed to fetch the result. Check the console for details.');
-            }
+            document.getElementById('result').innerHTML = htmlContent;
+            addTableFilter();
+        } catch (error) {
+            console.error('Error fetching the result:', error);
+            document.getElementById('result').innerText = 'Error fetching result: ' + error.message;
+            alert('Failed to fetch the result. Check the console for details.');
         }
+    }
 
-        function formatDate(date) {
-            const d = new Date(date);
-            const day = String(d.getDate()).padStart(2, '0');
-            const month = String(d.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
-            const year = d.getFullYear();
-            return `${month}-${year}`; // Adjust format as needed
-        }
+    function formatDate(date) {
+        const d = new Date(date);
+        const day = String(d.getDate()).padStart(2, '0');
+        const month = String(d.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+        const year = d.getFullYear();
+        return `${month}-${year}`; // Adjust format as needed
+    }
 
-        function formatNumber(num) {
-            return parseFloat(num).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        }
+    function formatNumber(num) {
+        return parseFloat(num).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
 
-        window.onload = fetchResult;
-    </script>
+   function addTableFilter() {
+    const filterInput = document.getElementById('filterInput');
+    filterInput.addEventListener('input', function() {
+        const filterValue = filterInput.value.toLowerCase();
+        const rows = document.querySelectorAll('#reconciliationTable tbody tr');
+        rows.forEach(row => {
+            const cells = row.getElementsByTagName('td');
+            // Assuming Applicable Date is in the first column
+            const applicableDate = cells[0].textContent.toLowerCase();
+            // Check if filterValue is present in the Applicable Date column
+            const matches = applicableDate.includes(filterValue);
+            row.style.display = matches ? '' : 'none';
+        });
+    });
+}
+
+
+
+    window.onload = fetchResult;
+</script>
 </body>
 </html>
