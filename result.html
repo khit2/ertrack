@@ -23,11 +23,15 @@
         #result {
             font-size: 1.2em;
         }
+        .table-container {
+            overflow-x: auto; /* Enables horizontal scrolling if necessary */
+            width: 100%; /* Ensures the container takes full width */
+            margin: 20px 0; /* Add margin around the table container */
+        }
         table {
-            margin: 20px auto;
             border: 1px solid #fff;
             border-collapse: collapse;
-            width: 80%;
+            width: 100%; /* Adjust table width to 100% of its container */
         }
         th, td {
             border: 1px solid #fff;
@@ -37,7 +41,7 @@
         }
         th {
             background-color: #555;
-            font-size: 0.4em; /* Slightly larger font size for headers */
+            font-size: 0.3em; /* Slightly larger font size for headers */
         }
     </style>
 </head>
@@ -81,18 +85,19 @@
                         <strong>ER NUMBER:</strong><br> ${erNumber}<br><br>
                         <strong>ER NAME:</strong><br> ${erName}<br><br>
                         <h4>R3/R5 RECONCILIATION</h4>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Applicable Date</th>
-                                    <th>Payment Date</th>
-                                    <th>Amt Paid Per R-5</th>
-                                    <th>Amt Due Per R-3</th>
-                                    <th>Difference Over/Under</th>
-                                    <th>Cumulative Over/Under</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Applicable Date</th>
+                                        <th>Payment Date</th>
+                                        <th>Amt Paid Per R-5</th>
+                                        <th>Amt Due Per R-3</th>
+                                        <th>Difference Over/Under</th>
+                                        <th>Cumulative Over/Under</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
                     `;
 
                     data.reconciliationData.forEach((row, index) => {
@@ -118,8 +123,9 @@
                     });
 
                     htmlContent += `
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
                     `;
                 }
 
