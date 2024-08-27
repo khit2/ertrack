@@ -37,7 +37,7 @@
         border: 1px solid #fff;
         padding: 8px; /* Adjust padding as needed */
         text-align: center;
-        font-size: 0.5em; /* Adjust font size for better readability */
+        font-size: 0.3em; /* Adjust font size for better readability */
     }
     th {
         background-color: darkblue;
@@ -160,13 +160,31 @@ h6{
         }
     }
 
-    function formatDate(date) {
+ function formatData(value) {
+    if (isNaN(Date.parse(value)) && typeof value === 'string') { 
+        return '***'; // Replace NaN dates with ***
+    }
+    if (isNaN(value) && typeof value !== 'string') { 
+        return '***'; // Replace NaN numbers with ***
+    }
+    return value;
+}
+
+function formatDate(date) {
     const d = new Date(date);
+    
+    if (isNaN(d.getTime())) {
+        return '***'; // Return *** if the date is invalid
+    }
+    
     const day = String(d.getDate()).padStart(2, '0');
     const month = String(d.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
     const year = d.getFullYear();
-    return `${month}-${day}-${year}`; // Adjusted format to MM-DD-YYYY
+    
+    return `${month}-${day}-${year}`; // Return in MM-DD-YYYY format
 }
+
+
 function formatdate(date) {
     const d = new Date(date);
     const month = String(d.getMonth() + 1).padStart(2, '0'); // Get the month and pad with zero if necessary
