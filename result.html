@@ -37,12 +37,18 @@
         border: 1px solid #fff;
         padding: 8px; /* Adjust padding as needed */
         text-align: center;
-        font-size: 0.4em; /* Adjust font size for better readability */
+        font-size: 0.5em; /* Adjust font size for better readability */
     }
     th {
-        background-color: #555;
-        font-size: 0.3em; /* Slightly larger font size for headers */
+        background-color: darkblue;
+        font-size: 0.5em; /* Slightly larger font size for headers */
     }
+    td {
+        background-color: white;
+	color: black;
+	 border: 1px solid black;
+	font-weight: bold;
+	}
     .filter-input {
         margin: 20px 0;
         padding: 10px;
@@ -63,7 +69,7 @@
     <h4>Candon Branch</h4><br>
     <h1>Employer Profile</h1>
     <div id="result">
-        <input type="text" id="filterInput" class="filter-input" placeholder="Filter by Applicable Date or Payment Date...">
+        <input type="text" id="filterInput" class="filter-input" placeholder="Filter by Applicable Date...">
         Loading...
     </div>
 </div>
@@ -93,12 +99,12 @@
                 const erNumber = data.erNumber || 'Not available';
                 const erName = data.erName || 'Not available';
                 htmlContent = `
-<strong>ER NUMBER:</strong><br> ${erNumber}<br><br>
-<strong>ER NAME:</strong><br> ${erName}<br><br>
-<h4>R3/R5 RECONCILIATION</h4>
-<div class="table-container">
-    <input type="text" id="filterInput" class="filter-input" placeholder="Filter by Applicable Date...">
-    <table id="reconciliationTable">
+	<strong>ER NUMBER:</strong><br> ${erNumber}<br><br>
+	<strong>ER NAME:</strong><br> ${erName}<br><br>
+	<h4>R3/R5 RECONCILIATION</h4>
+	<div class="table-container">
+   	 <input type="text" id="filterInput" class="filter-input" placeholder="Filter by Applicable Date...">
+  	  <table id="reconciliationTable">
         <thead>
             <tr>
                 <th>Applicable Date</th>
@@ -114,7 +120,7 @@
 
                 data.reconciliationData.forEach((row, index) => {
                     if (index > 0) { // Skip header row
-                        const applicableDate = formatDate(row[0]);
+                        const applicableDate = formatdate(row[0]);
                         const paymentDate = formatDate(row[1]);
                         const amtPaid = formatNumber(row[2]);
                         const amtDue = formatNumber(row[3]);
@@ -151,12 +157,18 @@
     }
 
     function formatDate(date) {
-        const d = new Date(date);
-        const day = String(d.getDate()).padStart(2, '0');
-        const month = String(d.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
-        const year = d.getFullYear();
-        return `${month}-${year}`; // Adjust format as needed
-    }
+    const d = new Date(date);
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+    const year = d.getFullYear();
+    return `${month}-${day}-${year}`; // Adjusted format to MM-DD-YYYY
+}
+function formatdate(date) {
+    const d = new Date(date);
+    const month = String(d.getMonth() + 1).padStart(2, '0'); // Get the month and pad with zero if necessary
+    const year = d.getFullYear();
+    return `${month}-${year}`; // Return in "MM-YYYY" format
+}
 
     function formatNumber(num) {
         return parseFloat(num).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
